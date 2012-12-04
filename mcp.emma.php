@@ -123,17 +123,6 @@ Code for Emma Lists
           {
             $first_day=date('Y-m')."-01";
             $first_day_time=strTotime($first_day);//first day of month
-            /*$members=  ($this->EE->emma_model->getGroupMembers($group->member_group_id));
-            foreach($members as $member)
-            {
-                $time_date=str_replace('@D:','',$member->member_since);
-                $time_date=str_replace('T',' ', $time_date);
-                $member_since_time=strtotime($time_date);
-                if($member_since_time > $first_day_time && $member->status=="active")
-                {
-                    $new_subscriber_count++;
-                }
-            }*/
             $attr = array(
                 'onclick'=>"return confirm('Are you sure to Delete this Group?')"
             );            
