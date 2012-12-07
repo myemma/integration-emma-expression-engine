@@ -20,25 +20,68 @@ class Emma {
 
 	function Emma()
 	{		
-		$this->EE =& get_instance(); // Make a local reference to the ExpressionEngine super object
-        $this->EE->load->model('emma_model');    
+	    $this->EE =& get_instance(); // Make a local reference to the ExpressionEngine super object
+            $this->EE->load->model('emma_model');    
         
 	}
 	/*{exp:emma:subscribe}
-{/exp:emma:subscribe}  */
-    public function subscribe() {
+        {/exp:emma:subscribe}  */
+
+        public function subscribe() 
+        {
+            $vars=array();
+            $this->EE->load->library('table');
+            $this->EE->load->library('session');                                   
+            $this->EE->load->helper('form');
+            $message="";
+            $message_color="red";
+            $member_id='';
+            if(isset($_POST['emma_subscribe']))
+            {                                    
+               $group_data[]=intval($this->EE->config->item('emma_default_group'));
+               $email = $_POST['email'];             
+               if($email)
+               {
+                   $fields['first_name']  = $_POST['name'];
+                   $response = $this->EE->emma_model->createEmmaUser($email,$fields,$group_data);                                                 
+                   if(!isset($response_add->error))
+                   {
+                       if( isset($response->member_id) )
+                       {
+                           $group_data[] = $this->EE->config->item('emma_default_group');
+                           $response = $this->EE->emma_model->addMemberToGroups($response->member_id,$group_data);  
+                           $message=lang("Data Updated successfully !!!");                                                                                                                        $message_color="green";
+                       }
+                   }
+                   else
+                   {
+                       $message=lang("Oooops Something went wrong");
+                                                                                                                                                                                          }               
+               }
+            }                                                                   
+            $vars=array(
+               'member_id'=>$member_id,
+               'message_color'=>$message_color,
+               'message'=>$message,
+               'action_url'=>"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
+                 );
+            return $this->EE->load->view('emma_subscribe_form',$vars,TRUE); 
+              
+        }  
+
+    public function subscribe_old() {
         $vars=array();
         $this->EE->load->library('table');
         $this->EE->load->library('session');
-        $user_email=$this->EE->session->userdata('email');
+#        $user_email=$this->EE->session->userdata('email');
         //var_dump($this->EE->session->userdata);
         $this->EE->load->helper('form');
         $message="";
         $message_color="red";
         $member_id='';
         $group_data=$member_group_ids=array();
-        if($user_email)
-        {
+ #       if($user_email)
+  #      {
             if(isset($_POST['emma_subscribe']))
             {
                foreach($_POST['group_list'] as $val)
@@ -110,7 +153,7 @@ class Emma {
                 'action_url'=>"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
             );
             return $this->EE->load->view('emma_subscribe_form', $vars, TRUE); 
-        }
+      #  }
     }  
 	/**
      * Helper function for getting a parameter

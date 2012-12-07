@@ -123,12 +123,24 @@ Code for Emma Lists
           {
             $first_day=date('Y-m')."-01";
             $first_day_time=strTotime($first_day);//first day of month
+            /*$members=  ($this->EE->emma_model->getGroupMembers($group->member_group_id));
+            foreach($members as $member)
+            {
+                $time_date=str_replace('@D:','',$member->member_since);
+                $time_date=str_replace('T',' ', $time_date);
+                $member_since_time=strtotime($time_date);
+                if($member_since_time > $first_day_time && $member->status=="active")
+                {
+                    $new_subscriber_count++;
+                }
+            }*/
             $attr = array(
                 'onclick'=>"return confirm('Are you sure to Delete this Group?')"
             );            
             $actions = array(
               anchor( $this->base.AMP.'method=emma_add_edit_group_form&id='.$group->member_group_id,lang('Rename')),
-              anchor($this->base.AMP.'method=emma_group_delete_submit&id='.$group->member_group_id.'&group_id='.$group->member_group_id,lang('Delete'),$attr)
+              anchor($this->base.AMP.'method=emma_group_delete_submit&id='.$group->member_group_id.'&group_id='.$group->member_group_id,lang('Delete'),$attr),
+              $this->EE->config->item('emma_default_group') != $group->member_group_id ? anchor($this->base.AMP.'method=emma_default_group_submit&id='.$group->member_group_id , lang('Set as default')) : ""
             );  
             $rows[] = array(
               $i,  
@@ -252,6 +264,13 @@ Code for Emma Lists
         $this->EE->functions->redirect($this->base.AMP.'method=emma_lists');        
     }    
     
+    public function emma_default_group_submit()
+    {
+        $insert['emma_default_group'] = intval($this->EE->input->get('id'));
+        $this->EE->config->_update_config($insert);
+        $this->EE->functions->redirect($this->base.AMP.'method=emma_lists');
+    }
+
     public function emma_group_details()
     {
         $this->EE->load->library('table');

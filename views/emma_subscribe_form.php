@@ -1,19 +1,30 @@
 <?php 
     if($message)
     {?>
-    <div> <span style="color:<?php echo $message_color?>"><?php echo $message?></span>
-    <?php }  
-    $attributes = array('id' => 'emma_subscribe_form');
-    echo form_open('http://camping5.empressem.in/EE/index.php/site/subscribe',$attributes);
-    $this->table->add_row(array(
-            lang('Select the groups you want to subscribe [Uncheck for Unsubscribing] ', 'group_list'),
-            '<div style="overflow: auto; max-height: 100px;">'.form_multiselect('group_list[]', $groups,$member_group_ids).'</div>',
-        )
-    );     
 
+    <div> <span style="color:<?php echo $message_color?>"><?php echo $message?></span>
+<?php }  ?>
+<style type="text/css">
+        #emma_subscribe_form input[type="submit"] { background-color: #ECECEC; border: 1px solid #B4B4B4; text-transform: uppercase; padding: 4px 7px; margin: 7px 0 5px 0; text-align: center; }
+        #emma_subscribe_form input[type="submit"]:hover { background-color: #CECECE; }
+        #emma-form-elements { padding: 4px; margin: 0; }
+        #emma-form-elements .emma-group-list-label { padding: 4px 0; text-align: left; }
+        #emma-form-elements .emma-select-group-list { padding: 4px 0; }
+        #emma-form-elements select { border: 1px solid #DCDCDC; color: #565656; width: 98%; padding: 4px; }
+        #emma-form-elements select option { padding: 2px 0; }
+</style>
+<?php
+
+    $attributes = array('id' => 'emma_subscribe_form');
+    echo form_open($action_url,$attributes);
+    $this->table->add_row(array(
+        '<label>Name</label>','<input type="text" name="name" id="name" />'));
+    $this->table->add_row(array('<label>Email*</label>','<input type="email" name="email" id="email" required="true" />'
+    ));
     echo $this->table->generate();
-    echo form_hidden('emma_member_id', $member_id, 'class="field"');
+    #echo form_hidden('emma_member_id', $member_id, 'class="field"');
+    
     echo form_hidden('emma_subscribe', '1', 'class="field"')
 ?>
-	<?=form_submit(array('name' => 'submit', 'value' => lang('Submit'), 'class' => 'submit'))?>
+	<?=form_submit(array('name' => 'submit', 'value' => lang('Submit')))?>
 <?=form_close()?>    
